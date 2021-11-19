@@ -1,9 +1,17 @@
 // server.js
 
+const { application } = require('express');
 const express = require('express');
+const bodyParser = require('body-parser')
 const app = express();
 const { auth } = require('express-oauth2-jwt-bearer');
 const port = 3000
+const jwt_decode = require('jwt-decode')
+
+
+var jsonParser = bodyParser.json()
+
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 // Authorization middleware. When used, the Access Token must
 // exist and be verified against the Auth0 JSON Web Key Set.
 const checkJwt = auth({
@@ -13,6 +21,18 @@ const checkJwt = auth({
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
+})
+
+app.post('/prueba', jsonParser, (req,res) => {
+
+  //console.log(req.body)
+  const {token} = req.body;
+
+  const decoded = jwt_decode(token)
+
+  console.log(decoded)
+
+  res.send('termino')
 })
 
 // This route doesn't need authentication
